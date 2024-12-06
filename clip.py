@@ -84,7 +84,7 @@ def clip(mege_folder):
     dst_crs = 'EPSG:4326'
 
     # These coordinates are in UTM
-    dst_bounds = overlap
+    dst_bounds = overlap[0], overlap[3], overlap[2], overlap[1]
 
     # Output image dimensions
     dst_height = 6036
@@ -106,7 +106,7 @@ def clip(mege_folder):
     }
 
     results = []
-    extensions = ['_dem.tif','_corr.tif','_water_mask.tif','_lv_theta.tif', '_lv_phi.tif','_unw_phase.tif']
+    extensions = ['_unw_phase.tif'] #['_dem.tif','_corr.tif','_water_mask.tif','_lv_theta.tif', '_lv_phi.tif','_unw_phase.tif']
 
 
     for extension in extensions:

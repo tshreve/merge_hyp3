@@ -20,7 +20,7 @@ def hyp3_par(path,data_folder,merge_folder,num2merge,dst_crs = 'EPSG:4326',coh_t
     #dst_crs = 'EPSG:4326'
 
     # Currently run all but unw_phase first, then unw_phase
-    suffixes = ['water_mask.tif']#['corr.tif','dem.tif', 'lv_theta.tif', 'lv_phi.tif', 'water_mask.tif']#,'unw_phase.tif',
+    suffixes = ['corr.tif','dem.tif', 'lv_theta.tif', 'lv_phi.tif', 'water_mask.tif']#,'unw_phase.tif',
     outfiles_ll = []
 
     for _, value in intf_dates_dict.items():
