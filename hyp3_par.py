@@ -1,17 +1,13 @@
 #!/usr/bin/env python
+import os
+import dask
+from dask.distributed import Client
+from run_merge import setup,run_merge
 
 def hyp3_par(path,data_folder,merge_folder,num2merge,dst_crs = 'EPSG:4326',coh_thresh = 0.95):
-    import os
-    import dask
-    from dask.distributed import Client
-    from run_merge import setup,run_merge
+
     ################################################
     
-    if __name__ == '__main__':
-        client = Client(threads_per_worker=2, n_workers=1)
-        print(client.dashboard_link)
-
-
     hyp3_results = []
 
     #path = ''
@@ -23,7 +19,8 @@ def hyp3_par(path,data_folder,merge_folder,num2merge,dst_crs = 'EPSG:4326',coh_t
     #merge_folder = 'merged'
     #dst_crs = 'EPSG:4326'
 
-    suffixes = ['corr.tif','dem.tif', 'lv_theta.tif', 'lv_phi.tif', 'water_mask.tif']#,'unw_phase.tif',
+    # Currently run all but unw_phase first, then unw_phase
+    suffixes = ['water_mask.tif']#['corr.tif','dem.tif', 'lv_theta.tif', 'lv_phi.tif', 'water_mask.tif']#,'unw_phase.tif',
     outfiles_ll = []
 
     for _, value in intf_dates_dict.items():
@@ -48,10 +45,12 @@ def hyp3_par(path,data_folder,merge_folder,num2merge,dst_crs = 'EPSG:4326',coh_t
 
     return results
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     import sys
-    
+
+    client = Client(threads_per_worker=2, n_workers=1)
+    print(client.dashboard_link)
+
     if len(sys.argv) < 5:
         print("Usage: hyp3_par.py abs_path rel_data_folder rel_merge_folder num2merge [dst_crs] [coh_thresh]")
         sys.exit(1)

@@ -363,13 +363,29 @@ def merge_intfs(files, value, datasets, new_fold, suff, coh_thresh = 0.95):
         value_at_point0, shifted_data0, px0, py0 = reference_dataset(datasets[sorted_indexes[0]], outpaths[0], lat, lon)
         value_at_point1, shifted_data1, px1, py1 = reference_dataset(datasets[sorted_indexes[1]], outpaths[1], lat, lon)
 
-        # check for errors
+        # check for errors (ex: reference point at masked water body, corrupted images, etc.)
+        if value_at_point0 == 0 or value_at_point1 == 0:
+          print("Shifted values are zero, rerunning.")
+          c = c + 1
+          lat = coords[c][0]
+          lon = coords[c][1]
+          pyc1, pxc1 = rowcol(coh_all.transform, lon, lat)
+          coh_h = coh_all_dat[int(pyc1),int(pxc1)] 
+          while coh_h < coh_thresh:
+            c = c + 1
+            lat = coords[c][0]
+            lon = coords[c][1]
+            pyc1, pxc1 = rowcol(coh_all.transform, lon, lat)
+            coh_h = coh_all_dat[int(pyc1),int(pxc1)] 
+          print(f"Try2: Coherence is {coh_h} at {lon}, {lat}")
+          print("Referencing first images at", lat, lon)
+          value_at_point0, shifted_data0, px0, py0 = reference_dataset(datasets[sorted_indexes[0]], outpaths[0], lat, lon)
+          value_at_point1, shifted_data1, px1, py1 = reference_dataset(datasets[sorted_indexes[1]], outpaths[1], lat, lon)
+
         if value_at_point0 == value_at_point1:
           print("Shifted values are the same, check your images please.")
           exit()
-        elif value_at_point0 == 0 or value_at_point1 == 0:
-          print("Pixel value is 0.0, check your images please.")
-          exit()
+ 
 
         # create array of shifted datasets
         shifted_data = [shifted_data0, shifted_data1]
