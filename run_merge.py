@@ -23,6 +23,7 @@ def setup(path,data_folder):
     root_dir = Path(path)
 
     intf_dates_dict = search.search_intf(root_dir,data_folder)
+    print(intf_dates_dict)
 
     # set coherence threshold
     ##coh_thresh = 0.95

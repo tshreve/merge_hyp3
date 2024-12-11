@@ -7,7 +7,6 @@ from rasterio.merge import merge
 from rasterio.transform import rowcol
 
 import re
-from osgeo import gdal
 import numpy as np
 import shutil
 import matplotlib.pyplot as plt

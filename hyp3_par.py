@@ -4,7 +4,7 @@ import dask
 from dask.distributed import Client
 from run_merge import setup,run_merge
 
-def hyp3_par(path,data_folder,merge_folder,num2merge,dst_crs = 'EPSG:4326',coh_thresh = 0.95):
+def hyp3_par(path,data_folder,merge_folder,num2merge,unwrap,dst_crs = 'EPSG:4326',coh_thresh = 0.95):
 
     ################################################
     
@@ -13,14 +13,18 @@ def hyp3_par(path,data_folder,merge_folder,num2merge,dst_crs = 'EPSG:4326',coh_t
     #path = ''
 
     root_dir, intf_dates_dict = setup(path,data_folder)
-
+    unwrap = unwrap.lower() == 'true'
+    
     #coh_thresh = 0.95
     #num2merge = 3 
     #merge_folder = 'merged'
     #dst_crs = 'EPSG:4326'
 
     # Currently run all but unw_phase first, then unw_phase
-    suffixes = ['corr.tif','dem.tif', 'lv_theta.tif', 'lv_phi.tif', 'water_mask.tif']#,'unw_phase.tif',
+    if unwrap == False:
+        suffixes = ['corr.tif','dem.tif', 'lv_theta.tif', 'lv_phi.tif', 'water_mask.tif']
+    elif unwrap == True:
+        suffixes = ['unw_phase.tif']
     outfiles_ll = []
 
     for _, value in intf_dates_dict.items():
@@ -48,15 +52,15 @@ def hyp3_par(path,data_folder,merge_folder,num2merge,dst_crs = 'EPSG:4326',coh_t
 if __name__ == '__main__':
     import sys
 
-    client = Client(threads_per_worker=2, n_workers=1)
+    client = Client(threads_per_worker=2, n_workers=5)
     print(client.dashboard_link)
 
-    if len(sys.argv) < 5:
-        print("Usage: hyp3_par.py abs_path rel_data_folder rel_merge_folder num2merge [dst_crs] [coh_thresh]")
+    if len(sys.argv) < 6:
+        print("Usage: hyp3_par.py abs_path rel_data_folder rel_merge_folder num2merge unwrap [dst_crs] [coh_thresh]")
         sys.exit(1)
-    elif len(sys.argv) == 5:
-        hyp3_par(sys.argv[1],sys.argv[2],sys.argv[3],int(sys.argv[4]))
     elif len(sys.argv) == 6:
         hyp3_par(sys.argv[1],sys.argv[2],sys.argv[3],int(sys.argv[4]),sys.argv[5])
     elif len(sys.argv) == 7:
-        hyp3_par(sys.argv[1],sys.argv[2],sys.argv[3],int(sys.argv[4]),sys.argv[5],float(sys.argv[6]))
+        hyp3_par(sys.argv[1],sys.argv[2],sys.argv[3],int(sys.argv[4]),sys.argv[5],sys.argv[6])
+    elif len(sys.argv) == 8:
+        hyp3_par(sys.argv[1],sys.argv[2],sys.argv[3],int(sys.argv[4]),sys.argv[5],sys.argv[6],float(sys.argv[7]))

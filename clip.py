@@ -10,7 +10,7 @@ import os
 import affine
 from pathlib import Path
 
-import rasterio
+import rasterio as rs
 from rasterio.crs import CRS
 from rasterio.enums import Resampling
 from rasterio import shutil as rio_shutil
@@ -31,7 +31,7 @@ def get_common_overlap(file_list: List[Union[str, Path]]) -> List[float]:
     corners = []
     file_list_new = []
     for dem in file_list:
-      corner_dem = gdal.Info(str(dem), format='json')['cornerCoordinates']
+      corner_dem = rs.Info(str(dem), format='json')['cornerCoordinates']
       corners.append(corner_dem)
       #print(f"File {dem} has coordinates {corner_dem}")
 
@@ -50,7 +50,7 @@ def clip_files(file,vrt_options):
     if os.path.isfile(outfile):
         print(outfile, " exists, skipping")
     else:
-        with rasterio.open(file) as src:
+        with rs.open(file) as src:
 
             with WarpedVRT(src, **vrt_options) as vrt:
 
