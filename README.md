@@ -89,6 +89,3 @@ Contributions are encouraged! I will do my best to continue updating this script
 
 Ideas for increased functionality are also welcome. Thanks to all who are helping to make InSAR more accessible!
 
-## License
-This project was funded by the Utah Geological Survey, and I am still figuring out licensing.
-
