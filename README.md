@@ -40,7 +40,7 @@ export PYTHONPATH='/path/to/package:$PYTHONPATH'
 Ensure all your data folders are in the same location and create a destinate folder to put the merged files. The script will automatically find all folders that have the same interferogram reference/seconday dates. 
 
 <br>
-To run the project, use the following command:
+To run the merging step, use the following command:
 
 ```bash
 ./hyp3_par.py abs_path rel_data_folder rel_merge_folder num2merge unwrap [dst_crs] [coh_thresh]
@@ -54,6 +54,29 @@ where: <br>
 ```unwrap``` : whether you want to merged interferograms (*IMPORTANT*: First run with ```unwrap=False```, then ```unwrap=True``` so coherence files are merged first. This workflow can be improved.) <br>
 ```dst_crs``` : desired output coordinate system (optional)  <br>
 ```coh_thresh``` : coherence threshold for choosing reference points for interferogram merging (optional; default = 0.95) <br>
+
+To resample and clip the images to the same size, use:
+
+```bash
+./clip.py  abs_merge_path
+```
+
+where: <br>
+```abs_path``` : absolute path to your merged folder <br>
+
+You can then run MintPy using these resampled and merged geotiffs. Instructions are starting from Section 3.2 in [this tutorial](https://nbviewer.org/github/ASFHyP3/hyp3-docs/blob/main/docs/tutorials/hyp3_insar_stack_for_ts_analysis.ipynb).
+
+Finally, you can cleanup unnecessary files using the following:
+
+```bash
+./cleanup.py  abs_merge_path abs_data_path
+```
+
+where: <br>
+```abs_merge_path``` : absolute path to your merged folder <br>
+```abs_data_path``` : absolute path to your data folder <br>
+
+
 
 ## Contributing
 Contributions are encouraged! I will do my best to continue updating this script, but if you've found ways to improve it on your own, feel free to create a PR using the following:
