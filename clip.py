@@ -4,11 +4,11 @@ from __future__ import division
 
 from pathlib import Path
 from typing import List, Union
-from osgeo import gdal
 import os
 
 import affine
 from pathlib import Path
+from collections import Counter
 
 import rasterio as rs
 from rasterio.crs import CRS
@@ -29,17 +29,36 @@ def get_common_overlap(file_list: List[Union[str, Path]]) -> List[float]:
          corner coordinates of the common overlap
     """
     corners = []
+    widths = []
+    heights = []
     file_list_new = []
     for dem in file_list:
-      corner_dem = rs.Info(str(dem), format='json')['cornerCoordinates']
-      corners.append(corner_dem)
-      #print(f"File {dem} has coordinates {corner_dem}")
+        with rs.open(str(dem)) as dataset:
+            bounds = dataset.bounds
+            corner_dem = {
+                'upperLeft': (bounds.left, bounds.top),
+                'lowerRight': (bounds.right, bounds.bottom)
+                }
+            width = dataset.width
+            height = dataset.height
+        
+        #corner_dem = gdal.Info(str(dem), format='json')['cornerCoordinates']
+        corners.append(corner_dem)
+        widths.append(width)
+        heights.append(height)
+        #print(f"File {dem} has coordinates {corner_dem}, height {height}, width {width}")
 
     ulx = max(corner['upperLeft'][0] for corner in corners)
     uly = min(corner['upperLeft'][1] for corner in corners)
     lrx = min(corner['lowerRight'][0] for corner in corners)
     lry = max(corner['lowerRight'][1] for corner in corners)
-    return [ulx, uly, lrx, lry]
+
+    counter1 = Counter(widths)
+    counter2 = Counter(heights)
+    width_f = counter1.most_common(1)[0][0]
+    height_f = counter2.most_common(1)[0][0]
+    print("Overlap area is ", ulx, uly, lrx, lry, " and most common dimensions are", width_f, height_f)
+    return [[ulx, uly, lrx, lry], width_f, height_f]
 
 def clip_files(file,vrt_options):
 
@@ -73,12 +92,12 @@ def clip_files(file,vrt_options):
     return
 
 
-def clip(mege_folder):
+def clip(merge_folder):
 
-    data_dir = Path(mege_folder)
+    data_dir = Path(merge_folder)
 
     files = data_dir.glob('*/*_dem.tif')
-    overlap = get_common_overlap(files)
+    overlap, width, height = get_common_overlap(files)
     print("Overlap is", overlap)
 
     dst_crs = 'EPSG:4326'
@@ -87,8 +106,8 @@ def clip(mege_folder):
     dst_bounds = overlap[0], overlap[3], overlap[2], overlap[1]
 
     # Output image dimensions
-    dst_height = 6036
-    dst_width = 4847
+    dst_height = height
+    dst_width = width
 
     # Output image transform
     left, bottom, right, top = dst_bounds
@@ -106,12 +125,11 @@ def clip(mege_folder):
     }
 
     results = []
-    extensions = ['_unw_phase.tif'] #['_dem.tif','_corr.tif','_water_mask.tif','_lv_theta.tif', '_lv_phi.tif','_unw_phase.tif']
+    extensions = ['_dem.tif','_corr.tif','_water_mask.tif','_lv_theta.tif', '_lv_phi.tif','_unw_phase.tif']
 
 
     for extension in extensions:
         for file in data_dir.rglob(f'*{extension}'):
-            print(file)
             result = dask.delayed(clip_files)(file,vrt_options)
             results.append(result)
 

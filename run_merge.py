@@ -23,7 +23,6 @@ def setup(path,data_folder):
     root_dir = Path(path)
 
     intf_dates_dict = search.search_intf(root_dir,data_folder)
-    print(intf_dates_dict)
 
     # set coherence threshold
     ##coh_thresh = 0.95
@@ -55,11 +54,8 @@ def run_merge(value,num_vals,new_fold,suff,outfiles_ll,merge_folder,root_dir,mer
     if existing_files:
         print(f"Files {existing_files} already exists. Skipping processing.")
     else:
-        print(f"{final_outputs} do not exist.")
-
         # open each interferogram or datafile
         for image in value:
-            print(str(image))
             for file in image.glob(f'*{suff}'):
                 files.append(file)
                 dataset = rs.open(file)

@@ -329,7 +329,6 @@ def merge_intfs(files, value, datasets, new_fold, suff, coh_thresh = 0.95):
       names.append(name)
       outpath = new_fold /  (name + '_shifted.tif')
       outpaths.append(outpath)
-    print(outpaths)
 
     for k in range(len(sorted_lat_lons)-1):
       # reference first two interferograms based on same point
@@ -480,7 +479,6 @@ def merge_setup(value,root_dir,suff,num_vals,new_fold,merge_folder):
       new_fold_n = root_dir / merge_folder / os.path.basename(value[i])
       final_outputs.append(new_fold_n / (os.path.basename(value[i]) + path2))
 
-    print(final_outputs)
     existing_files = check_files_exist(final_outputs)
 
     return existing_files, final_outputs
