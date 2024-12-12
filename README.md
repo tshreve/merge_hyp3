@@ -1,4 +1,4 @@
-# hyp3_merge
+# merge_hyp3
 This package is for merging Sentinel-1 interferograms from Alaska Satellite Facility's Hybrid Pluggable Processing Pipeline (HyP3). Interferograms can be ordered frame-by-frame using HyP3, and this tool allows for merging the various geotiff products with the same reference and secondary dates over a larger area for a given path. Output merged geotiffs can be input directly into Mintpy for time-series analysis. The minimum requried products downloaded from HyP3 are ```*_unw_phase.tif```, ```*_dem.tif```,  ```*_corr.tif```, ```*_lv_theta.tif```, ```*_lv_phi.tif```, and ```*_water_mask.tif```. <br>
 <br>
 **Note 1**: Input geotiffs are converted from UTM to lat/lon due to processing errors when a path passes through multiple UTM zones. However, one should be aware that this coordinate transformation may introduce resampling errors. 
@@ -15,20 +15,20 @@ This package is for merging Sentinel-1 interferograms from Alaska Satellite Faci
 - ## Installation
 1. Clone the repository:
 ```bash
-git clone https://github.com/tshreve/hyp3_merge.git
+git clone https://github.com/tshreve/merge_hyp3.git
 ```
 
-2. Install dependencies using ```hyp3_merge_dependencies.txt``` in a conda environment:
+2. Install dependencies using ```merge_hyp3_dependencies.txt``` in a conda environment:
 ```bash
 echo 'affine
 dask
 hyp3_sdk
 rasterio
-matplotlib' > hyp3_merge_dependencies.txt
+matplotlib' > merge_hyp3_dependencies.txt
  ```
 
 ```bash
-conda create --name hyp3_proc --file hyp3_merge_dependencies.txt
+conda create --name hyp3_proc --file merge_hyp3_dependencies.tx
  ```
 3. Prep PYTHONPATH
 
