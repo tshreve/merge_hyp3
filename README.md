@@ -5,6 +5,9 @@ This package is for merging Sentinel-1 interferograms from Alaska Satellite Faci
 <br>
 <br>
 **Note 2**: The asf_search tool stack() will not identify scenes that have different frame numbers as potential interferogram pairs. However, when interferogram scenes span a frame drift, there will be a spatial gap. One way to identify these gaps is by using the [ASF Data Search](https://search.asf.alaska.edu/) online tool. Missing interferograms can be aquired by manually choosing the scene IDs which overlap in the gap and submitting a job to Hyp3. This is tedious, so any alternative methods would be useful!
+<br>
+<br>
+**Note 3**: Unwrapped interferograms are merged by finding a pixel in an overlapping region that has coherence above a given threshold (default=0.95). That pixel's unwrapped phase value is used as a reference. However, occassionally this referencing procedure does not work properly and the interferogram scenes have stark phase jumps across them. In particular, this happens if there are unwrapping errors isolating the reference pixel. A difference reference point can be manually chosen, or these interferograms can be removed during the time series analysis.  
 
 ## Table of Contents
 - [Installation](#installation)
