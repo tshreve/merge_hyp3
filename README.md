@@ -28,7 +28,7 @@ matplotlib' > merge_hyp3_dependencies.txt
  ```
 
 ```bash
-conda create --name hyp3_proc --file merge_hyp3_dependencies.tx
+conda create --name hyp3_proc --file merge_hyp3_dependencies.txt
  ```
 3. Prep PYTHONPATH
 
@@ -37,7 +37,7 @@ export PYTHONPATH='/path/to/package:$PYTHONPATH'
  ```
 
 ## Usage
-Ensure all your data folders are in the same location and create a destinate folder to put the merged files. The script will automatically find all folders that have the same interferogram reference/seconday dates. 
+Ensure all your data folders are in the same location and create a destination folder for merged files. The script will automatically find all folders that have the same interferogram reference/seconday dates. 
 
 <br>
 To run the merging step, use the following command:
