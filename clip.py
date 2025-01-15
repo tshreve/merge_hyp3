@@ -5,6 +5,7 @@ from __future__ import division
 from pathlib import Path
 from typing import List, Union
 import os
+import numpy as np 
 
 import affine
 from pathlib import Path
@@ -47,17 +48,21 @@ def get_common_overlap(file_list: List[Union[str, Path]]) -> List[float]:
         widths.append(width)
         heights.append(height)
         #print(f"File {dem} has coordinates {corner_dem}, height {height}, width {width}")
-
+    ind = np.argmax(corner['upperLeft'][0] for corner in corners)
+    ind1 = np.argmax(corner['lowerRight'][1] for corner in corners)
+    print(ind, " is index of upperLeft max.")
+    print(ind1, " is index of lowerRight max.")
     ulx = max(corner['upperLeft'][0] for corner in corners)
     uly = min(corner['upperLeft'][1] for corner in corners)
     lrx = min(corner['lowerRight'][0] for corner in corners)
     lry = max(corner['lowerRight'][1] for corner in corners)
 
-    counter1 = Counter(widths)
-    counter2 = Counter(heights)
-    width_f = counter1.most_common(1)[0][0]
-    height_f = counter2.most_common(1)[0][0]
-    print("Overlap area is ", ulx, uly, lrx, lry, " and most common dimensions are", width_f, height_f)
+
+    #counter1 = Counter(widths)
+    #counter2 = Counter(heights)
+    width_f = widths[ind] #counter1.most_common(1)[0][0]
+    height_f = heights[ind] #counter2.most_common(1)[0][0]
+    print("Overlap area is ", ulx, uly, lrx, lry, " and corresponding dimensions are", width_f, height_f)
     return [[ulx, uly, lrx, lry], width_f, height_f]
 
 def clip_files(file,vrt_options):

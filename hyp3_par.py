@@ -4,23 +4,18 @@ import dask
 from dask.distributed import Client
 from run_merge import setup,run_merge
 
+#! To do: record in metadata the location of referencing 
+
 def hyp3_par(path,data_folder,merge_folder,num2merge,unwrap,dst_crs = 'EPSG:4326',coh_thresh = 0.95):
 
     ################################################
     
     hyp3_results = []
-
-    #path = ''
-
     root_dir, intf_dates_dict = setup(path,data_folder)
     unwrap = unwrap.lower() == 'true'
-    
-    #coh_thresh = 0.95
-    #num2merge = 3 
-    #merge_folder = 'merged'
-    #dst_crs = 'EPSG:4326'
 
     # Currently run all but unw_phase first, then unw_phase
+    # Adjust this list as needed 
     if unwrap == False:
         suffixes = ['corr.tif','dem.tif', 'lv_theta.tif', 'lv_phi.tif', 'water_mask.tif']
     elif unwrap == True:
@@ -34,7 +29,6 @@ def hyp3_par(path,data_folder,merge_folder,num2merge,unwrap,dst_crs = 'EPSG:4326
 
         # merge the date pair if there are enough interferograms
         if num_vals >= num2merge:
-
             new_fold = root_dir / merge_folder / os.path.basename(value[0])
             os.makedirs(new_fold,exist_ok=True)
             merged_datasets = []

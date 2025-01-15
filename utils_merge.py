@@ -211,7 +211,8 @@ def extract_dates(folder_name):
     :param folder_name: The folder name containing the dates.
     :return: A tuple containing the extracted date strings.
     """
-    # Define the regular expression pattern to match YYYYMMDD date strings
+    # Define the regular expression pattern to match YYYYMMDDTHHMMSS date strings
+    # This can be changed if your folder naming convention is different
     pattern = r'(\d{8})T\d{6}_(\d{8})T\d{6}'
 
     # Search for the pattern in the folder name
@@ -469,8 +470,8 @@ def merge_setup(value,root_dir,suff,num_vals,new_fold,merge_folder):
     for txt_file in txt_files:
       new_txt_file = new_fold / os.path.basename(txt_file)
       if not os.path.exists(new_txt_file):
-        shutil.copy(txt_file, new_fold)
-        print(f"Copied {txt_file} to {new_fold}")
+        os.system(f"cp '{txt_file}' '{new_fold}/.'")
+        print(f"Merging in {new_fold}.")
 
     # check if any of possible interferograms have already been merged, otherwise begin processing
     #! could use regex to do this instead

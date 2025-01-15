@@ -7,16 +7,16 @@ def remove_files_with_suffix_test(directory, suffix):
     for root, dirs, files in os.walk(directory):
         for filename in files:
             if filename.endswith(suffix):
-                file_path = os.path.join(directory, filename)
+                file_path = os.path.join(root, filename)
                 print(f"Will remove file: {file_path}")
 
 def remove_files_with_suffix_final(directory, suffix):
     for root, dirs, files in os.walk(directory):
         for filename in files:
             if filename.endswith(suffix):
-                file_path = os.path.join(directory, filename)
+                file_path = os.path.join(root, filename)
                 os.remove(file_path)
-                print(f"Will remove file: {file_path}")
+                print(f"Removed {file_path}")
 
 
 
@@ -32,7 +32,7 @@ if __name__ == '__main__':
     remove_files_with_suffix_test(merge_directory, '_dem.tif')
     remove_files_with_suffix_test(merge_directory, '_lv_phi.tif')
     remove_files_with_suffix_test(merge_directory, '_lv_theta.tif')
-    remove_files_with_suffix_test(merge_directory, '_merged_water.tif')
+    remove_files_with_suffix_test(merge_directory, '_merged_water_mask.tif')
     remove_files_with_suffix_test(merge_directory, '_unw_phase.tif')
 
     confirm = input(f"Are you sure you want to remove files with specified suffixes in {merge_directory} and {data_directory}? (yes/no): ")
@@ -46,5 +46,5 @@ if __name__ == '__main__':
         remove_files_with_suffix_final(merge_directory, '_dem.tif')
         remove_files_with_suffix_final(merge_directory, '_lv_phi.tif')
         remove_files_with_suffix_final(merge_directory, '_lv_theta.tif')
-        remove_files_with_suffix_final(merge_directory, '_merged_water.tif')
+        remove_files_with_suffix_final(merge_directory, '_merged_water_mask.tif')
         remove_files_with_suffix_final(merge_directory, '_unw_phase.tif')

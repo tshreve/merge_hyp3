@@ -10,11 +10,10 @@ from pathlib import Path
 import os
 import glob
 import rasterio as rs
-import dask
+import re
 
-
-from hyp3_merge import utils_merge as ut
-from hyp3_merge import search
+from merge_hyp3 import utils_merge as ut
+from merge_hyp3 import search
 
 
 def setup(path,data_folder):
@@ -23,19 +22,6 @@ def setup(path,data_folder):
     root_dir = Path(path)
 
     intf_dates_dict = search.search_intf(root_dir,data_folder)
-
-    # set coherence threshold
-    ##coh_thresh = 0.95
-
-    # define minimum number of interferograms to merge
-    ##num2merge = 3
-
-    ##merge_folder = 'merged'
-
-    ##dst_crs = 'EPSG:4326'
-
-    # define suffixes of files to merge
-
 
     return root_dir, intf_dates_dict
 
@@ -66,31 +52,21 @@ def run_merge(value,num_vals,new_fold,suff,outfiles_ll,merge_folder,root_dir,mer
 
         # if interferogram, reference values in overlap regions accordingly
         if suff == 'unw_phase.tif':
-            #try:
-            merged_dataset, final_output = ut.merge_intfs(files, value, datasets, new_fold, suff, coh_thresh)
-            #except Exception as e:
-            #  print(f"{e}; continuing")
-            #  continue
+            if num_vals == 1:
+                for c, name in enumerate(files):
+                    new_unw_file = new_fold / os.path.basename(name)
+                    new_unw_file_fin = re.sub(r'unw_phase', r'merged_unw_phase', str(new_unw_file))
+                    if not os.path.exists(new_unw_file_fin):
+                        os.system(f"cp '{name}' '{new_unw_file_fin}'")
+                    else:
+                        print(f"File {new_unw_file} already exists. Skipping processing.")
+            else:
+                merged_dataset, final_output = ut.merge_intfs(files, value, datasets, new_fold, suff, coh_thresh)
 
         # merge all other datasets that do not require referencing (coherence, dem, water mask, etc.)
         #! Except to avoid issues when different CRS. Convert to lat/lon to avoid issues: https://gis.stackexchange.com/questions/311837/mosaicking-images-with-different-crs-using-rasterio
         else:
-            #try:
             merged_dataset, final_output = ut.merge_datasets(datasets, new_fold, value, suff)
-            #except Exception as e:
-            #  print(f"{e}; continuing")
-            #  continue
-        ##merged_datasets.append(merged_dataset)
-        ##final_outputs_path.append(final_output)
-    ##print("Final output paths are", final_outputs_path)
-    ##for i, merged in enumerate(merged_datasets):
-    ##    outfile = ut.latlon2utm(merged,final_outputs_path[i],inp_crs)
-    ##    os.rename(outfile,final_outputs_path[i])
+
 
     return
-#def printVal(value):
-#    return ("hello "*(value))
-#pool_obj = multiprocessing.Pool()
-#ans = pool_obj.map(printVal,range(0,4))
-#print(ans)
-#pool_obj.close()
