@@ -27,6 +27,7 @@ echo 'affine
 dask
 hyp3_sdk
 rasterio
+osgeo
 matplotlib' > merge_hyp3_dependencies.txt
  ```
 
